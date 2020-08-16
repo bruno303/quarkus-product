@@ -22,16 +22,19 @@ import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
 @Transactional
-public class ProductServiceTest {
+class ProductServiceTest {
+
+	private final ProductService productService;
+	private final Fixture fixture;
 
 	@Inject
-	private ProductService productService;
-
-	@Inject
-	private Fixture fixture;
+	public ProductServiceTest(final ProductService productService, final Fixture fixture) {
+		this.productService = productService;
+		this.fixture = fixture;
+	}
 
 	@Test
-	public void testCreate() {
+	void testCreate() {
 		final ProductEntity product = new ProductEntity();
 		product.setBrand("brand");
 		product.setModelYear(LocalDate.now());
@@ -49,7 +52,7 @@ public class ProductServiceTest {
 	}
 
 	@Test
-	public void testFindByIdRequired() {
+	void testFindByIdRequired() {
 		final ProductEntity product = fixture.createProduct();
 		final ProductEntity productFromDatabase = productService.findByIdRequired(product.getId());
 
@@ -63,7 +66,7 @@ public class ProductServiceTest {
 	}
 
 	@Test
-	public void testUpdate() {
+	void testUpdate() {
 		final ProductEntity product = fixture.createProduct();
 		product.setName("product updated");
 		productService.update(product.getId(), product);
@@ -80,7 +83,7 @@ public class ProductServiceTest {
 	}
 
 	@Test
-	public void testRemove() {
+	void testRemove() {
 		final ProductEntity product = fixture.createProduct();
 		productService.remove(product.getId());
 		final ProductEntity productFromDatabase = productService.findById(product.getId());
@@ -88,14 +91,14 @@ public class ProductServiceTest {
 	}
 
 	@Test
-	public void testRemoveProductNotFound() {
+	void testRemoveProductNotFound() {
 		assertThrows(ProductNotFoundException.class, () -> {
 			productService.remove(Long.MAX_VALUE);
 		});
 	}
 
 	@Test
-	public void testUpdateInProductNotFound() {
+	void testUpdateInProductNotFound() {
 		final ProductEntity product = fixture.createProduct();
 		assertThrows(ProductNotFoundException.class, () -> {
 			productService.update(Long.MAX_VALUE, product);

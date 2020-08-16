@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.bso.quarkusproduct.entity.ProductEntity;
+import com.bso.quarkusproduct.rest.util.ApiResponse;
 import com.bso.quarkusproduct.service.ProductService;
 
 @Path("/products")
@@ -30,22 +31,25 @@ public class ProductResource {
 	}
 
 	@GET
-	public List<ProductEntity> list() {
-		return productService.list();
+	public Response list() {
+		final List<ProductEntity> products = productService.list();
+		final var response = new ApiResponse<>(products);
+		return Response.ok(response).build();
 	}
 
 	@POST
 	public Response create(@Valid final ProductEntity product) {
 		final ProductEntity productEntity = productService.create(product);
-		return Response.ok(productEntity).status(Response.Status.CREATED).build();
+		final var response = new ApiResponse<>(productEntity);
+		return Response.ok(response).status(Response.Status.CREATED).build();
 	}
 
 	@PUT
 	@Path("{id}")
 	public Response update(@PathParam("id") final Long id, final ProductEntity product) {
 		final ProductEntity productUpdated = productService.update(id, product);
-
-		return Response.ok(productUpdated).build();
+		final var response = new ApiResponse<>(productUpdated);
+		return Response.ok(response).build();
 	}
 
 	@DELETE
