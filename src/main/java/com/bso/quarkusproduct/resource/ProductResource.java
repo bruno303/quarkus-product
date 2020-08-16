@@ -15,44 +15,44 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.bso.quarkusproduct.entity.ProductEntity;
-import com.bso.quarkusproduct.repository.ProductRepository;
+import com.bso.quarkusproduct.service.ProductService;
 
 @Path("/products")
 @Produces(MediaType.APPLICATION_JSON)
 public class ProductResource {
-	
-	private final ProductRepository productRepository;
+
+	private final ProductService productService;
 
 	@Inject
-	public ProductResource(ProductRepository productRepository) {
+	public ProductResource(final ProductService productService) {
 		super();
-		this.productRepository = productRepository;
+		this.productService = productService;
 	}
-	
+
 	@GET
-    public List<ProductEntity> list() {
-        return productRepository.listAll();
-    }
+	public List<ProductEntity> list() {
+		return productService.list();
+	}
 
-    @POST
-    public Response create(@Valid ProductEntity product) {
-    	ProductEntity productEntity = productRepository.save(product);
-        return Response.ok(productEntity).status(Response.Status.CREATED).build();
-    }
+	@POST
+	public Response create(@Valid final ProductEntity product) {
+		final ProductEntity productEntity = productService.create(product);
+		return Response.ok(productEntity).status(Response.Status.CREATED).build();
+	}
 
-    @PUT
-    @Path("{id}")
-    public Response update(@PathParam("id") Long id, ProductEntity product) {
-    	ProductEntity productUpdated = productRepository.update(id, product);
+	@PUT
+	@Path("{id}")
+	public Response update(@PathParam("id") final Long id, final ProductEntity product) {
+		final ProductEntity productUpdated = productService.update(id, product);
 
-        return Response.ok(productUpdated).build();
-    }
+		return Response.ok(productUpdated).build();
+	}
 
-    @DELETE
-    @Path("{id}")
-    public Response remove(@PathParam("id") Long id) {
-        productRepository.remove(id);
-        return Response.status(Response.Status.NO_CONTENT).build();
-    }
+	@DELETE
+	@Path("{id}")
+	public Response remove(@PathParam("id") final Long id) {
+		productService.remove(id);
+		return Response.status(Response.Status.NO_CONTENT).build();
+	}
 
 }

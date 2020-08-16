@@ -8,13 +8,13 @@ import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
 public class ProductResourceTest {
-	
+
 	@Test
-    public void testProductEndpoint() {
-        given()
-          .when().get("/products")
-          .then()
-             .statusCode(200);
-    }
+	public void testProductEndpoint() {
+		given()
+		.when().get("/products")
+		.then()
+		.statusCode(200);
+	}
 
 }
